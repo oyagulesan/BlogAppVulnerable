@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <title>Oya's Python Flask Blog App For BAU</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+
+    <script src="/static/js/jquery-3.1.1.js"></script>
+
+    <script>
+        $(function(){
+            $.ajax({
+                url: '/getAllBlogsPublic',
+                type: 'GET',
+                success:function(response) {
+                    console.log(response);
+                    var data = JSON.parse(response);
+
+                    var itemsPerRow = 0;
+                    var div = $('<div>').attr('class', 'row');
+                    for (var i = 0; i < data.length; i++) {
+                        if (itemsPerRow < 3) {
+
+                            if (i == data.length - 1) {
+                                div.append(CreateThumb(data[i].Id,data[i].Title, data[i].Description, data[i].FilePath, data[i].SumLikes, data[i].HasLikes, data[i].UserName));
+                                $('.well').append(div);
+                            } else {
+                                div.append(CreateThumb(data[i].Id,data[i].Title, data[i].Description, data[i].FilePath, data[i].SumLikes, data[i].HasLikes, data[i].UserName));
+                                itemsPerRow++;
+                            }
+                        } else {
+                            $('.well').append(div);
+                            div = $('<div>').attr('class', 'row');
+                            div.append(CreateThumb(data[i].Id,data[i].Title, data[i].Description, data[i].FilePath, data[i].SumLikes, data[i].HasLikes, data[i].UserName));
+                            if (i == data.length - 1) {
+                                $('.well').append(div);
+                            }
+                            itemsPerRow = 1;
+                        }
+                    }
+                },
+                error:function(error){
+                    console.log(error);
+                }
+            });
+
+            $(document).on('click','[id^="btn_old_"]',function(){
+                var spId = $(this).attr('id').split('_')[1];
+                $.ajax({
+                    url: '/addUpdateLike',
+                    method: 'POST',
+                    data: {blog:$(this).attr('id').split('_')[1],like:1},
+                    success: function(response){
+                        console.log(response);
+                    },
+                    error: function(error){
+                        console.log(error);
+                    }
+                });
+            });
+            $(document).on('click','[id^="btnSearch"]',DoSearch);
+        })
+
+        function DoSearch(){
+            $.ajax({
+                url: '/getAllBlogsPublicSearch',
+                data : $('form').serialize(),
+                type: 'POST',
+                success:function(response) {
+                    console.log(response);
+                    var data = JSON.parse(response);
+                    console.log(data.length);
+
+                    $(".well").html("");
+
+                    var itemsPerRow = 0;
+                    var div = $('<div>').attr('class', 'row');
+                    for (var i = 0; i < data.length; i++) {
+                        if (itemsPerRow < 3) {
+
+                            if (i == data.length - 1) {
+                                div.append(CreateThumb(data[i].Id,data[i].Title, data[i].Description, data[i].FilePath, data[i].SumLikes, data[i].HasLikes, data[i].UserName));
+                                $('.well').append(div);
+                            } else {
+                                div.append(CreateThumb(data[i].Id,data[i].Title, data[i].Description, data[i].FilePath, data[i].SumLikes, data[i].HasLikes, data[i].UserName));
+                                itemsPerRow++;
+                            }
+                        } else {
+                            $('.well').append(div);
+                            div = $('<div>').attr('class', 'row');
+                            div.append(CreateThumb(data[i].Id,data[i].Title, data[i].Description, data[i].FilePath, data[i].SumLikes, data[i].HasLikes, data[i].UserName));
+                            if (i == data.length - 1) {
+                                $('.well').append(div);
+                            }
+                            itemsPerRow = 1;
+                        }
+                    }
+                },
+                error:function(error){
+                    console.log(error);
+                }
+            });
+        }
+
+        function CreateThumb(id,title,desc,filepath,like,haslikes,username){
+            var mainDiv = $('<div>').attr('class','col-sm-4 col-md-4');
+            var thumbNail = $('<div>').attr('class','thumbnail');
+            var img = $('<img>').attr({'src':filepath,'data-holder-rendered':true,'style':'height: 150px; width: 150px; display: block'});
+            var caption = $('<div>').attr('class','caption');
+            var title = $('<h3>').text(title);
+            var desc = $('<p>').text(desc);
+
+            var p = $('<p>');
+            var btn = $('<a>').attr({'id':'vw_'+id,'type':'button','class':'btn btn-danger btn-sm','href':'/viewBlog/'+id});
+            // var span = $('<span>').attr({'class':'glyphicon glyphicon-thumbs-up','aria-hidden':'true'});
+            var span = $('<span>').text('View');
+            p.append(btn.append(span));
+            var usr = $('<p>').text('by ' + username);
+
+            caption.append(title);
+            caption.append(desc);
+            caption.append(p);
+            caption.append(usr);
+            thumbNail.append(img);
+            thumbNail.append(caption);
+            mainDiv.append(thumbNail);
+            return mainDiv;
+        }
+    </script>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header">
+            <img src="/static/images/Oya_Icon.png" height="200" alt="Oya_Icon.png"/ >
+        </div>
+
+        <div>
+            <form class="form-signin">
+                <label for="searchText" class="sr-only">Search text</label>
+                <input type="name" name="searchText" id="searchText" class="form-control" placeholder="SearchText" required="true"/>
+                <button id="btnSearch" class="btn btn-lg btn-primary btn-block" type="button">Search</button>
+            </form>
+        </div>
+        <div class="well">
+
+            <!-- We'll populate this dynamically -->
+
+            <footer class="footer">
+               <p>&copy;obenliog 2018</p>
+            </footer>
+
+        </div>
+    </div>
+</body>
+
+</html>

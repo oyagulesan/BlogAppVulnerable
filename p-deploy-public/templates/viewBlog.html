@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <title>Oya's Python Flask Blog App For BAU</title>
+ 
+ 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+    <script src="/static/js/jquery-3.1.1.js"></script>
+    <script src="/static/js/jquery.ui.widget.js"></script>
+  
+    <script type="text/javascript" src="/static/js/jquery.fileupload.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.fileupload-process.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.fileupload-ui.js"></script>
+
+    <script>
+        $(function(){
+            $.ajax({
+                url: '/viewBlog1/',
+                type: 'GET',
+                success:function(response) {
+                    console.log(response);
+                    var data = JSON.parse(response);
+
+                    $('#editTitle').val(data[0].Title);
+                    $('#editDescription').val(data[0]['Description']);
+                    $('#imgUpload').attr('src','../'+data[0]['FilePath']);
+
+                    // Show comments
+                    $('#commentsdiv').html("");
+                    var cmt = $('<label>').attr('class', 'control-label');
+                    cmt.text('Comments:');
+                    $('#commentsdiv').append(cmt);
+                    var div = $('<div>').attr('class', 'row');
+                    for (var i = 0; i < data[0]['Comments'].length; i++) {
+                        div.append(AddCommentDiv(data[0].Comments[i].UserName, data[0].Comments[i].Comment));
+                    }
+                    $('#commentsdiv').append(div);
+                },
+                error:function(error){
+                    console.log(error);
+                }
+            });
+        })
+
+
+         function AddCommentDiv(username,comment){
+            var mainDiv = $('<div>').attr('class','col-sm-4 col-md-4');
+            var caption = $('<div>').attr('class','caption');
+            var thumbNail = $('<div>').attr('class','thumbnail');
+            var cmt = $('<p>').html(comment);
+            var usr = $('<p>').text('by ' + username);
+
+            caption.append(cmt);
+            caption.append(usr);
+
+            thumbNail.append(caption);
+
+            mainDiv.append(thumbNail);
+            return mainDiv;
+         }
+
+
+
+    </script>
+
+    <style>
+        .btn-file {
+            position: relative;
+            overflow: hidden;
+        }
+         
+        .btn-file input[type=file] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 100%;
+            min-height: 100%;
+            font-size: 100px;
+            text-align: right;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            outline: none;
+            background: white;
+            cursor: inherit;
+            display: block;
+        }
+    </style>
+ 
+</head>
+ 
+<body>
+ 
+    <div class="container">
+        <div class="header">
+            <img src="/static/images/Oya_Icon.png" height="200" alt="Oya_Icon.png"/ >
+        </div>
+
+        <div class="form-group">
+            <label for="recipient-name" class="control-label">Title:</label>
+            <input type="text" readonly="true" class="form-control" id="editTitle">
+        </div>
+        <div class="form-group">
+            <label for="message-text" class="control-label">Description:</label>
+            <textarea class="form-control" readonly="true" id="editDescription"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="txtPost">Photos</label>
+                <div class="input-group">
+                <div class="pull-right">
+                    <img id="imgUpload" style="width: 140px; height: 140px;" class="img-thumbnail"><input type="hidden" name="filePath" id="filePath"></input>
+                </div>
+            </div>
+        </div>
+
+        <div id='commentsdiv' class="form-group">
+        </div>
+
+        <form role="form" method="post" action="/addComment">
+            <div class="form-group">
+                <label for="blogId" class="control-label" hidden="true">Id:</label>
+                <input type="hidden" name="blogId" class="form-control" id="blogIdTxt" value={{blogid}}>
+                <label for="userName" class="control-label">Name:</label>
+                <input type="text" name="userName" class="form-control" id="userName">
+            </div>
+            <div class="form-group">
+                <label for="comment-text" class="control-label">Comment:</label>
+                <textarea class="form-control" name="comment" id="commentEdit"></textarea>
+            </div>
+            <button id="btnComment"  type="submit" value="Publish" class="btn btn-primary">Save Comment</button>
+        </form>
+
+
+
+        <footer class="footer">
+            <p>&copy;obenliog 2018</p>
+        </footer>
+ 
+    </div>
+</body>
+ 
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Oya's Python Flask Blog App For BAU</title>
+    
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link href="/static/css/signup.css" rel="stylesheet">
+    <script src="/static/js/jquery-3.1.1.js"></script>
+    <script src="/static/js/signUp.js"></script>
+  </head>
+ 
+  <body>
+ 
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" ><a href="/">Home</a></li>
+            <li role="presentation"><a href="/showSignin">Sign In</a></li>
+            <li role="presentation" class="active"><a href="#">Sign Up</a></li>
+          </ul>
+        </nav>
+        <img src="/static/images/Oya_Icon.png" height="200" alt="Oya_Icon.png"/ >
+      </div>
+
+      <div class="jumbotron">
+        <img src="/static/images/blog-icon.jpg" alt="blog-icon.jpg"/>
+      </div>
+        <hr/>
+      <div class="jumbotron">
+          <form class="form-signin">
+          <label for="inputName" class="sr-only" width="500">Name</label>
+        <input type="name" name="inputName" id="inputName" class="form-control" placeholder="Name" required autofocus>
+          <br/>
+        <label for="inputEmail" class="sr-only" width="500">Email address</label>
+        <input type="email" name="inputEmail" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+          <br/>
+        <label for="inputPassword" class="sr-only" width="500">Password</label>
+        <input type="password" name="inputPassword" id="inputPassword" class="form-control" placeholder="Password" required>
+         <br/>
+        <button id="btnSignUp" class="btn btn-lg btn-primary btn-block" type="button">Sign up</button>
+      </form>
+      </div>
+ 
+      <footer class="footer">
+        <p>&copy;obenliog 2018</p>
+      </footer>
+ 
+    </div>
+  </body>
+</html>
